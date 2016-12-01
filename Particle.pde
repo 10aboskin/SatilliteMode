@@ -50,27 +50,6 @@ class Particle {
     }
   }
 
-  Particle(PVector l, float maxLife) {
-    this.maxLife = maxLife;
-    noff = PVector.random3D().mult(1000);
-    acceleration = new PVector();
-    velocity = new PVector();    
-    position = l.copy();
-    lifeLeft = random(minLife, maxLife);
-    size = random(minSize, maxSize);
-
-    //float choice = random(1);
-    //if (choice < 0.25) {
-    //  c = darkPink;
-    //} else if (choice > 0.25 && choice < 0.5) {
-    //  c = orange;
-    //} else if (choice > 0.5 && choice < 0.75) {
-    //  c = lightGreen;
-    //} else if (choice > 0.75) {
-    //  c = blue;
-    //}
-  }
-
   void run() {
     update();
     display();
@@ -105,16 +84,9 @@ class Particle {
     pushMatrix();
     translate(position.x, position.y, position.z);
     float lifeAlpha = map(lifeLeft, minLife, maxLife, 55, 255);
-    //stroke(255, lifeAlpha);
-    //noFill();
     noStroke();
-
     fill(c, lifeAlpha);
-    //fill(255, 204, 0);
-    //sphere(size);
-
     ellipse(0, 0, size, size);
-
     popMatrix();
   }
 
