@@ -1,7 +1,8 @@
 class ParticleSystem {
   ArrayList<Particle> particles;
   PVector origin;
-  float maxParticles = 5;
+  // 6
+  float maxParticles = 6;
   float minMovement = 1;
   float maxMovement = 2;
 
@@ -25,41 +26,13 @@ class ParticleSystem {
     }
   }
 
-  void addParticle(float maxLife) {
-    if (particles.size() <= maxParticles) {
-      particles.add(new Particle(origin, maxLife));
-    }
-  }
-
-  //void addParticle(PVector position) {
-  //  particles.add(new Particle(position));
-  //}
-
   void run() {
-    //moveOriginRandom();
     for (int i = particles.size()-1; i >= 0; i--) {
       Particle p = particles.get(i);
       p.run();
       if (p.isDead()) {
         particles.remove(i);
       }
-    }
-  }
-
-  void moveOriginRandom() {
-    int choice = int(random(4));
-    switch (choice) {
-    case 0: 
-      origin.x += random(minMovement, maxMovement);
-      break;
-    case 1: 
-      origin.x -= random(minMovement, maxMovement);
-      break;
-    case 2: 
-      origin.y += random(minMovement, maxMovement);
-      break;
-    case 3: 
-      origin.y -= random(minMovement, maxMovement);
     }
   }
 }

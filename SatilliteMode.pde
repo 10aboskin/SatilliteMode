@@ -6,7 +6,6 @@ import ddf.minim.analysis.*;
 /* Constants */
 // 60
 float systemRadius = 30;
-float eRadius;
 float eRadiusMin = 250;
 float eRadiusMax = 500;
 // 80
@@ -27,21 +26,24 @@ Minim minim;
 AudioInput in;
 BeatDetect beat;
 ArrayList<ParticleSystem> nucleus;
+float eRadius;
+boolean isFullscreen;
 PShader blur;
 
 void setup() {
   /* init */
-  //size(1000, 450, P3D);
-  fullScreen(P3D);
+  size(1000, 450, P3D);
+  // fullscreen(2);
   noCursor();
   frameRate(24);
   smooth();
   blur = loadShader("blur.glsl"); 
-
+  
   /* initialize global variables */
   minim = new Minim(this);
   in = minim.getLineIn(Minim.STEREO, 2048, 192000.0);
   beat = new BeatDetect();
+  isFullscreen = false;
 
   nucleus = new ArrayList<ParticleSystem>();
   for (int i = 0; i < numSystems; i++) { 
@@ -56,7 +58,7 @@ void draw() {
   pushMatrix();
   translate(width/2, height/2, 0);
 
-  /* nucleus */  
+  /* nucleus */
   for (int i = 0; i < nucleus.size(); i++) {
     //int sample = int(map(i, 0, particleSystems.size(), 0, in.bufferSize()));
     float factor = map(in.mix.level(), 0, 0.3, 0.1, 10);
@@ -65,7 +67,6 @@ void draw() {
     nucleus.get(i).run();
     nucleus.get(i).setPosition(nucleus.get(i).origin.mult(1/factor));
   }
-
   filter(blur);
   popMatrix();
 }

@@ -8,11 +8,16 @@ class Particle {
   float minLife = 0;
   float maxLife = 30;
   float decayRate = 1.0;
-  float size = 6;
+  float maxSize = 16;
+  float minSize = 6;
+  float colorChangeInt = 8;
+
+  color c;
 
   float noiseVal = 0.1;
   PVector noiseIncrement = new PVector(noiseVal, noiseVal, noiseVal);
   PVector noff;
+  float size;
 
   Particle(PVector l) {
     noff = PVector.random3D().mult(1000);
@@ -20,15 +25,29 @@ class Particle {
     velocity = new PVector();    
     position = l.copy();
     lifeLeft = random(minLife, maxLife);
-  }
+    size = random(minSize, maxSize);
 
-  Particle(PVector l, float maxLife) {
-    this.maxLife = maxLife;
-    noff = PVector.random3D().mult(1000);
-    acceleration = new PVector();
-    velocity = new PVector();    
-    position = l.copy();
-    lifeLeft = random(minLife, maxLife);
+    if (millis() % 4000 < 2000) {
+      float choice = random(1);
+      if (choice < 0.25) {
+        c = darkPink;
+      } else if (choice > 0.25 && choice < 0.5) {
+        c = orange;
+      } else if (choice > 0.5 && choice < 0.75) {
+        c = lightGreen;
+      } else if (choice > 0.75) {
+        c = blue;
+      }
+    } else {
+      /* color roto */
+      float time = frameCount/frameRate;
+      for (int i = 1; i <= 7; i ++) {
+        if (time % colorChangeInt < i*colorChangeInt/7) {
+          c = colors[i - 1];
+          break;
+        }
+      }
+    }
   }
 
   void run() {
@@ -65,15 +84,9 @@ class Particle {
     pushMatrix();
     translate(position.x, position.y, position.z);
     float lifeAlpha = map(lifeLeft, minLife, maxLife, 55, 255);
-    //stroke(255, lifeAlpha);
-    //noFill();
     noStroke();
-    fill(255, lifeAlpha);
-    //fill(255, 204, 0);
-    //sphere(size);
-
+    fill(c, lifeAlpha);
     ellipse(0, 0, size, size);
-
     popMatrix();
   }
 
