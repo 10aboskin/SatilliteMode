@@ -2,7 +2,6 @@ import com.hamoid.*;
 import ddf.minim.*;
 import ddf.minim.analysis.*;
 
-
 /* Constants */
 // 60
 float systemRadius = 30;
@@ -29,6 +28,7 @@ ArrayList<ParticleSystem> nucleus;
 float eRadius;
 boolean isFullscreen;
 PShader blur;
+float rotate;
 
 void setup() {
   /* init */
@@ -44,6 +44,7 @@ void setup() {
   in = minim.getLineIn(Minim.STEREO, 2048, 192000.0);
   beat = new BeatDetect();
   isFullscreen = false;
+  rotate = 0;
 
   nucleus = new ArrayList<ParticleSystem>();
   for (int i = 0; i < numSystems; i++) { 
@@ -57,7 +58,7 @@ void draw() {
   beat.detect(in.mix);
   pushMatrix();
   translate(width/2, height/2, 0);
-
+  rotateZ(rotate);
   /* nucleus */
   for (int i = 0; i < nucleus.size(); i++) {
     //int sample = int(map(i, 0, particleSystems.size(), 0, in.bufferSize()));
@@ -69,4 +70,5 @@ void draw() {
   }
   filter(blur);
   popMatrix();
+  rotate+=0.00375;
 }

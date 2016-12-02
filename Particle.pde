@@ -1,8 +1,4 @@
 class Particle {
-  PVector position;
-  PVector velocity;
-  PVector acceleration;
-  float lifeLeft;
   float maxAcceleration = 0.3;
   float maxVelocity = 4;
   float minLife = 0;
@@ -10,14 +6,17 @@ class Particle {
   float decayRate = 1.0;
   float maxSize = 16;
   float minSize = 6;
-  float colorChangeInt = 8;
+  float colorChangeInt = 6;
+  float colorRotoInt = colorChangeInt*7;
+  PVector noiseIncrement = new PVector(0.1, 0.1, 0.1);
 
   color c;
-
-  float noiseVal = 0.1;
-  PVector noiseIncrement = new PVector(noiseVal, noiseVal, noiseVal);
   PVector noff;
   float size;
+  PVector position;
+  PVector velocity;
+  PVector acceleration;
+  float lifeLeft;
 
   Particle(PVector l) {
     noff = PVector.random3D().mult(1000);
@@ -27,22 +26,13 @@ class Particle {
     lifeLeft = random(minLife, maxLife);
     size = random(minSize, maxSize);
 
-    if (millis() % 4000 < 2000) {
-      float choice = random(1);
-      if (choice < 0.25) {
-        c = darkPink;
-      } else if (choice > 0.25 && choice < 0.5) {
-        c = orange;
-      } else if (choice > 0.5 && choice < 0.75) {
-        c = lightGreen;
-      } else if (choice > 0.75) {
-        c = blue;
-      }
+    float time = frameCount/frameRate;
+    if (time % colorChangeInt < colorChangeInt/2) {
+      c = colors[int(random(1) * colors.length)];
     } else {
       /* color roto */
-      float time = frameCount/frameRate;
-      for (int i = 1; i <= 7; i ++) {
-        if (time % colorChangeInt < i*colorChangeInt/7) {
+      for (int i = 1; i <= colors.length; i ++) {
+        if (time % colorRotoInt < i*colorRotoInt/colors.length) {
           c = colors[i - 1];
           break;
         }

@@ -1,8 +1,4 @@
 class Particle {
-  PVector position;
-  PVector velocity;
-  PVector acceleration;
-  float lifeLeft;
   float maxAcceleration = 0.3;
   float maxVelocity = 4;
   float minLife = 0;
@@ -11,13 +7,15 @@ class Particle {
   float maxSize = 16;
   float minSize = 6;
   float colorChangeInt = 8;
+  PVector noiseIncrement = new PVector(0.1, 0.1, 0.1);
 
   color c;
-
-  float noiseVal = 0.1;
-  PVector noiseIncrement = new PVector(noiseVal, noiseVal, noiseVal);
   PVector noff;
   float size;
+  PVector position;
+  PVector velocity;
+  PVector acceleration;
+  float lifeLeft;
 
   Particle(PVector l) {
     noff = PVector.random3D().mult(1000);

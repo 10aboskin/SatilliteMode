@@ -2,7 +2,6 @@ import com.hamoid.*;
 import ddf.minim.*;
 import ddf.minim.analysis.*;
 
-
 /* Constants */
 // 60
 float systemRadius = 30;
@@ -29,21 +28,27 @@ ArrayList<ParticleSystem> nucleus;
 float eRadius;
 boolean isFullscreen;
 PShader blur;
+float rotate;
+
+VideoExport videoExport;
 
 void setup() {
   /* init */
-  size(1000, 450, P3D);
-  // fullscreen(2);
+  //size(1000, 450, P3D);
+  fullScreen(P3D);
   noCursor();
   frameRate(24);
   smooth();
-  blur = loadShader("blur.glsl"); 
+  blur = loadShader("blur.glsl");
   
   /* initialize global variables */
   minim = new Minim(this);
   in = minim.getLineIn(Minim.STEREO, 2048, 192000.0);
   beat = new BeatDetect();
   isFullscreen = false;
+  rotate = 0;
+  
+  videoExport = new VideoExport(this, "rotate.mp4");
 
   nucleus = new ArrayList<ParticleSystem>();
   for (int i = 0; i < numSystems; i++) { 
@@ -57,11 +62,11 @@ void draw() {
   beat.detect(in.mix);
   pushMatrix();
   translate(width/2, height/2, 0);
-
+  rotateZ(rotate);
   /* nucleus */
   for (int i = 0; i < nucleus.size(); i++) {
     //int sample = int(map(i, 0, particleSystems.size(), 0, in.bufferSize()));
-    float factor = map(in.mix.level(), 0, 0.3, 0.1, 10);
+    float factor = map(in.mix.level(), 0, 0.3, 0.1, 15);
     nucleus.get(i).setPosition(nucleus.get(i).origin.mult(factor));
     nucleus.get(i).addParticle();
     nucleus.get(i).run();
@@ -69,4 +74,6 @@ void draw() {
   }
   filter(blur);
   popMatrix();
+  rotate+=0.00375;
+  videoExport.saveFrame();
 }

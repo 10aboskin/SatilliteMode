@@ -22,7 +22,6 @@ public class SatilliteMode extends PApplet {
 
 
 
-
 /* Constants */
 // 60
 float systemRadius = 30;
@@ -49,6 +48,7 @@ ArrayList<ParticleSystem> nucleus;
 float eRadius;
 boolean isFullscreen;
 PShader blur;
+float rotate;
 
 public void setup() {
   /* init */
@@ -64,6 +64,7 @@ public void setup() {
   in = minim.getLineIn(Minim.STEREO, 2048, 192000.0f);
   beat = new BeatDetect();
   isFullscreen = false;
+  rotate = 0;
 
   nucleus = new ArrayList<ParticleSystem>();
   for (int i = 0; i < numSystems; i++) { 
@@ -77,7 +78,7 @@ public void draw() {
   beat.detect(in.mix);
   pushMatrix();
   translate(width/2, height/2, 0);
-
+  rotateZ(rotate);
   /* nucleus */
   for (int i = 0; i < nucleus.size(); i++) {
     //int sample = int(map(i, 0, particleSystems.size(), 0, in.bufferSize()));
@@ -89,13 +90,9 @@ public void draw() {
   }
   filter(blur);
   popMatrix();
+  rotate+=0.00375f;
 }
-
 class Particle {
-  PVector position;
-  PVector velocity;
-  PVector acceleration;
-  float lifeLeft;
   float maxAcceleration = 0.3f;
   float maxVelocity = 4;
   float minLife = 0;
@@ -104,13 +101,15 @@ class Particle {
   float maxSize = 16;
   float minSize = 6;
   float colorChangeInt = 8;
+  PVector noiseIncrement = new PVector(0.1f, 0.1f, 0.1f);
 
   int c;
-
-  float noiseVal = 0.1f;
-  PVector noiseIncrement = new PVector(noiseVal, noiseVal, noiseVal);
   PVector noff;
   float size;
+  PVector position;
+  PVector velocity;
+  PVector acceleration;
+  float lifeLeft;
 
   Particle(PVector l) {
     noff = PVector.random3D().mult(1000);
